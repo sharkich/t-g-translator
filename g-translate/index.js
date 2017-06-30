@@ -31,10 +31,11 @@
     }
 
     class Translate {
-        constructor ({id, source, result}) {
+        constructor ({id, source, result, date}) {
             this.source = source instanceof Phrase ? source : new Phrase(source);
             this.result = result instanceof Phrase ? result : new Phrase(result);
             this.id = id || this.source.text;
+            this.date = date || Date.now();
         }
     }
 
@@ -98,7 +99,7 @@
         // Create the schema
         OPEN_DB.onupgradeneeded = () => {
             DB = OPEN_DB.result;
-            STORE_DB = DB.createObjectStore(DB_STORAGE_KEY, {keyPath: 'id'});
+            STORE_DB = DB.createObjectStore(DB_STORAGE_KEY, {keyPath: 'date'});
             STORE_DB.createIndex(DB_INDEX_KEY, ['source.language', 'result.language']);
         };
 
