@@ -15,13 +15,14 @@
     const DB_STORAGE_KEY = 'translates';
     const DB_INDEX_KEY = 'SomeIndex';
 
+    let DB, STORE_DB, TX_DB;
     const INDEXED_DB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
     const OPEN_DB = INDEXED_DB.open(DB_NAME_KEY, 1);
 
     // Create the schema
     OPEN_DB.onupgradeneeded = () => {
-        const DB = OPEN_DB.result;
-        const STORE_DB = DB.createObjectStore(DB_STORAGE_KEY, {keyPath: 'id'});
+        DB = OPEN_DB.result;
+        STORE_DB = DB.createObjectStore(DB_STORAGE_KEY, {keyPath: 'id'});
         STORE_DB.createIndex(DB_INDEX_KEY, ['source.language', 'result.language']);
     };
 
@@ -29,85 +30,88 @@
 
     class Phrase {
         constructor ({text, language}) {
-            this.text = '' + text;
+            this.text = ('' + text).trim();
             this.language = language || LANGUAGES.english;
         }
     }
 
     class Translate {
         constructor ({id, source, result}) {
-            this.id = id || source.text;
             this.source = source instanceof Phrase ? source : new Phrase(source);
             this.result = result instanceof Phrase ? result : new Phrase(result);
+            this.id = id || this.source.text;
         }
     }
 
     /* RUNNING */
 
     const CLEAR_EL = document.createElement('div');
-    CLEAR_EL.className = 'c';
+    CLEAR_EL.className = 'tg__c';
 
     const SAVE_LINK_EL = document.createElement('a');
     SAVE_LINK_EL.appendChild(document.createTextNode('Save'));
     SAVE_LINK_EL.className = 'tg__btn-save';
     SAVE_LINK_EL.onclick = () => {
-        console.log('click');
         // Add some data
-        PHRASES.forEach((phrase) => {
-            console.log('try to put', phrase);
-            STORE_DB.put(phrase);
+        let sourse = document.getElementById('source').value;
+        let sourse_lang = document.getElementById('gt-sl').value;
+        const RESULT_EL = document.getElementById('result_box');
+        let result = RESULT_EL.innerText;
+        let result_lang = RESULT_EL.getAttribute('lang');
+
+        console.log('click', sourse, sourse_lang, result, result_lang);
+        let t = new Translate({
+            source: {
+                text: sourse,
+                language: sourse_lang
+            },
+            result: {
+                text: result,
+                language: result_lang
+            }
         });
+        console.log(t);
+
+        const OPEN_DB = INDEXED_DB.open(DB_NAME_KEY, 1);
+        OPEN_DB.onsuccess = () => {
+            // Start a new transaction
+            DB = OPEN_DB.result;
+            TX_DB = DB.transaction(DB_STORAGE_KEY, 'readwrite');
+            STORE_DB = TX_DB.objectStore(DB_STORAGE_KEY);
+            STORE_DB.index(DB_INDEX_KEY);
+            STORE_DB.put(t);
+            // Close the db when the transaction is done
+            TX_DB.oncomplete = function() {
+                DB.close();
+            };
+        };
     };
 
-    //Appending to DOM
+    //Appending `Save` button to DOM
     WRAPPER_FOR_BUTTONS_EL.appendChild(SAVE_LINK_EL);
 
     const PHRASES = [];
 
     // Init data
-    (() => {
+    OPEN_DB.onsuccess = () => {
+        // Start a new transaction
+        DB = OPEN_DB.result;
+        TX_DB = DB.transaction(DB_STORAGE_KEY, 'readwrite');
+        STORE_DB = TX_DB.objectStore(DB_STORAGE_KEY);
+        STORE_DB.index(DB_INDEX_KEY);
+        
+        const GET_ALL_DB = STORE_DB.getAll();
 
-        // PHRASES.push(new Translate({
-        //     source: new Phrase({
-        //         text: 'language',
-        //         language: LANGUAGES.english
-        //     }),
-        //     result: new Phrase({
-        //         text: 'язык',
-        //         language: LANGUAGES.russian
-        //     })
-        // }));
-        // PHRASES.push(new Translate({
-        //     source: new Phrase({
-        //         text: 'adorable',
-        //         language: LANGUAGES.english
-        //     }),
-        //     result: new Phrase({
-        //         text: 'обожаемый',
-        //         language: LANGUAGES.russian
-        //     })
-        // }));
-        // PHRASES.push(new Translate({
-        //     source: new Phrase({
-        //         text: 'гипотетически',
-        //         language: LANGUAGES.russian
-        //     }),
-        //     result: new Phrase({
-        //         text: 'Hypothetically',
-        //         language: LANGUAGES.english
-        //     })
-        // }));
-        // PHRASES.push(new Translate({
-        //     source: new Phrase({
-        //         text: 'мачь на вашей стороне',
-        //         language: LANGUAGES.russian
-        //     }),
-        //     result: new Phrase({
-        //         text: 'the ball in your court',
-        //         language: LANGUAGES.english
-        //     })
-        // }));
-    })();
+        GET_ALL_DB.onsuccess = () => {
+            GET_ALL_DB.result.forEach((result) => PHRASES.push(new Translate(result)));
+            renderList();
+        };
+
+        // Close the db when the transaction is done
+        TX_DB.oncomplete = function() {
+            DB.close();
+        };
+    };
 
 
     function renderList () {
@@ -148,25 +152,5 @@
 
         WRAPPER_FOR_CONTENT_EL.appendChild(LIST_EL);
     }
-
-    OPEN_DB.onsuccess = () => {
-        // Start a new transaction
-        const DB = OPEN_DB.result;
-        const TX_DB = DB.transaction(DB_STORAGE_KEY, 'readwrite');
-        const STORE_DB = TX_DB.objectStore(DB_STORAGE_KEY);
-        STORE_DB.index(DB_INDEX_KEY);
-        
-        const GET_ALL_DB = STORE_DB.getAll();
-
-        GET_ALL_DB.onsuccess = () => {
-            GET_ALL_DB.result.forEach((result) => PHRASES.push(new Translate(result)));
-            renderList();
-        };
-
-        // Close the db when the transaction is done
-        TX_DB.oncomplete = function() {
-            DB.close();
-        };
-    };
 
 })();
