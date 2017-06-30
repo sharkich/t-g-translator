@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "t-g-translator",
+    "description": "[Google Chrome Extension] Additional functionality for Google Translate. Such as History, Favorite, Learning etc",
+    "version": "1.0",
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "history",
+        "storage",
+        "https://ajax.googleapis.com/"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://translate.google.com/*"],
+            "css": ["g-translate/index.css"],
+            "js": ["g-translate/index.js"]
+        }
+    ]
+}
+
