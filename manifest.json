@@ -18,7 +18,9 @@
         {
             "matches": ["https://translate.google.com/*"],
             "css": ["g-translate/index.css"],
-            "js": ["g-translate/index.js"]
+            "js": [
+                "g-translate/index.js"
+            ]
         }
     ]
 }
