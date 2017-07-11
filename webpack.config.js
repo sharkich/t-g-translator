@@ -26,7 +26,7 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(['dist'], {
-            exclude: ['icon.png', 'manifest.json', 'popup'],
+            exclude: ['icon.png', 'manifest.json', 'popup', 'bundle.style.js'],
             verbose: true,
             dry: false
         }),

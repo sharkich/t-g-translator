@@ -1,15 +1,11 @@
-// require('./index.scss');
+
+import {Translate} from './models/translate';
 
 const WRAPPER_FOR_BUTTONS_EL = document.getElementById('gt-lang-submit');
 const WRAPPER_FOR_CONTENT_EL = document.getElementById('gt-lc'); // || gt-src-c
 const WRAPPER_CONTENT_EL = document.createElement('div');
 WRAPPER_CONTENT_EL.className = 'tg_content';
 WRAPPER_FOR_CONTENT_EL.appendChild(WRAPPER_CONTENT_EL);
-
-const LANGUAGES = {
-    english: 'EN',
-    russian: 'RU'
-};
 
 /* DB */
 
@@ -18,33 +14,6 @@ const DB_STORAGE_KEY = 'translates';
 const DB_INDEX_KEY = 'SomeIndex';
 
 let DB, STORE_DB, TX_DB, INDEXED_DB, OPEN_DB;
-
-
-/* CLASSES */
-
-class Phrase {
-    public text: string;
-    public language: string;
-
-    constructor ({text, language}) {
-        this.text = ('' + text).trim();
-        this.language = language || LANGUAGES.english;
-    }
-}
-
-class Translate {
-    public source: Phrase;
-    public result: Phrase;
-    public id: string;
-    public date: Date;
-
-    constructor ({id, source, result, date}) {
-        this.source = source instanceof Phrase ? source : new Phrase(source);
-        this.result = result instanceof Phrase ? result : new Phrase(result);
-        this.id = id || this.source.text;
-        this.date = date || Date.now();
-    }
-}
 
 /* RUNNING */
 
@@ -114,7 +83,7 @@ function openDB () {
         STORE_DB.createIndex(DB_INDEX_KEY, ['source.language', 'result.language']);
     };
 
-    // Init data
+    // Read data
     OPEN_DB.onsuccess = () => {
         // Start a new transaction
         DB = OPEN_DB.result;
@@ -174,3 +143,7 @@ function renderList () {
 
     WRAPPER_CONTENT_EL.appendChild(LIST_EL);
 }
+
+import {MyAppDatabase, IContact} from './services/db';
+const db = new MyAppDatabase();
+db.contacts.put({first: "First name " + Math.random(), last: "Last name " + Math.random()});
