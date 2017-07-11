@@ -1,0 +1,19 @@
+.tg {
+    &__c {
+        clear: both;
+    }
+
+    &__btn-save {
+        height: 30px;
+        margin: 0 8px;
+        cursor: pointer;
+    }
+
+    &__source-text {
+        color: #000;
+    }
+
+    &__result-text {
+        color: #777;
+    }
+}
