@@ -6,6 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "./node_modules/.bin/webpack --config webpack.config.js --progress --colors --watch",
+        "style": "./node_modules/.bin/webpack --config webpack.config.style.js --progress --colors --watch",
         "build": "webpack"
     },
     "repository": {
@@ -20,13 +21,17 @@
     },
     "homepage": "https://github.com/temich666/t-g-translator#readme",
     "devDependencies": {
+        "@types/node": "^8.0.10",
         "clean-webpack-plugin": "^0.1.16",
         "copy-webpack-plugin": "^4.0.1",
         "css-loader": "^0.28.4",
         "file-loader": "^0.11.2",
         "node-sass": "^4.5.3",
         "sass-loader": "^6.0.6",
+        "source-map-loader": "^0.2.1",
         "style-loader": "^0.18.2",
+        "ts-loader": "^2.2.2",
+        "typescript": "^2.4.1",
         "webpack": "^3.1.0"
     }
 }

@@ -1,11 +1,4 @@
-/* CONSTANTS */
-
-// require('file-loader?emitFile=false!./icon.png');
-// require('file-loader?emitFile=false!./manifest.json');
-// require('file-loader?emitFile=false!./popup/popup.html');
-// require('file-loader?emitFile=false!./popup/popup.js');
-
-require('./index.scss');
+// require('./index.scss');
 
 const WRAPPER_FOR_BUTTONS_EL = document.getElementById('gt-lang-submit');
 const WRAPPER_FOR_CONTENT_EL = document.getElementById('gt-lc'); // || gt-src-c
@@ -30,6 +23,9 @@ let DB, STORE_DB, TX_DB, INDEXED_DB, OPEN_DB;
 /* CLASSES */
 
 class Phrase {
+    public text: string;
+    public language: string;
+
     constructor ({text, language}) {
         this.text = ('' + text).trim();
         this.language = language || LANGUAGES.english;
@@ -37,6 +33,11 @@ class Phrase {
 }
 
 class Translate {
+    public source: Phrase;
+    public result: Phrase;
+    public id: string;
+    public date: Date;
+
     constructor ({id, source, result, date}) {
         this.source = source instanceof Phrase ? source : new Phrase(source);
         this.result = result instanceof Phrase ? result : new Phrase(result);
@@ -55,8 +56,10 @@ SAVE_LINK_EL.appendChild(document.createTextNode('Save'));
 SAVE_LINK_EL.className = 'tg__btn-save';
 SAVE_LINK_EL.onclick = () => {
     // Add some data
-    let sourse = document.getElementById('source').value;
-    let sourse_lang = document.getElementById('gt-sl').value;
+    const SOURSE_EL = document.getElementById('source');
+    let sourse = SOURSE_EL['value'];
+    const SOURSE_LANG_EL = document.getElementById('gt-sl');
+    let sourse_lang = SOURSE_LANG_EL['value'];
     const RESULT_EL = document.getElementById('result_box');
     let result = RESULT_EL.innerText;
     let result_lang = RESULT_EL.getAttribute('lang');
@@ -70,6 +73,7 @@ SAVE_LINK_EL.onclick = () => {
         STORE_DB.index(DB_INDEX_KEY);
 
         STORE_DB.put(new Translate({
+            id: null,
             source: {
                 text: sourse,
                 language: sourse_lang
@@ -77,7 +81,8 @@ SAVE_LINK_EL.onclick = () => {
             result: {
                 text: result,
                 language: result_lang
-            }
+            },
+            date: null
         }));
 
         // Close the db when the transaction is done
@@ -99,7 +104,7 @@ openDB();
 function openDB () {
     phrases = [];
 
-    INDEXED_DB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+    INDEXED_DB = window.indexedDB || window['mozIndexedDB'] || window['webkitIndexedDB'] || window['msIndexedDB'] || window['shimIndexedDB'];
     OPEN_DB = INDEXED_DB.open(DB_NAME_KEY, 1);
 
     // Create the schema

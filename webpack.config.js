@@ -3,29 +3,32 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/index.ts',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
     devtool: 'source-map', // any 'source-map'-like devtool is possible
+    resolve: {
+        extensions: ['.ts']
+    },
     module: {
         loaders: [
             {
-                test: /\.scss/,
-                loader: 'style-loader!css-loader!sass-loader'
-            },
-            {
                 test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3|json|popup)$/,
                 loader: 'file-loader'
+            },
+            {
+                test: /\.ts?$/,
+                loader: 'ts-loader'
             }
         ]
     },
     plugins: [
         new CleanWebpackPlugin(['dist'], {
-            exclude:  ['icon.png', 'manifest.json', 'popup'],
-            verbose:  true,
-            dry:      false
+            exclude: ['icon.png', 'manifest.json', 'popup'],
+            verbose: true,
+            dry: false
         }),
         new CopyWebpackPlugin([
             {

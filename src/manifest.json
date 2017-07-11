@@ -15,7 +15,10 @@
     "content_scripts": [
         {
             "matches": ["https://translate.google.com/*"],
-            "js": ["bundle.js"]
+            "js": [
+                "bundle.style.js",
+                "bundle.js"
+            ]
         }
     ]
 }
