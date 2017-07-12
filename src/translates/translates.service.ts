@@ -20,6 +20,21 @@ export class TranslatesService extends Dexie {
         });
     }
 
+    getAll(): Promise<any> {
+        return Promise.all([
+            this.getFavoritesCount(),
+            this.getHistoriesCount(),
+            this.getFavorites(),
+            this.getHistories()
+        ])
+            .then((data) => ({
+                favoritesCount: data[0],
+                historiesCount: data[1],
+                favorites: data[2],
+                histories: data[3]
+            }));
+    }
+
     /* Favorites */
 
     getFavoritesCount(): Promise<number> {

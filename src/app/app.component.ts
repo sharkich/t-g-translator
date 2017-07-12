@@ -33,33 +33,17 @@ export class AppComponent {
         window.addEventListener('load', this.initUI.bind(this));
 
         /* Get data */
-
-        this.translatesService.getHistoriesCount()
-            .then((historiesCount) => {
-                console.log('historiesCount', historiesCount);
-                this.historiesCount = historiesCount;
-            });
-
-        this.translatesService.getHistories()
-            .then((histories) => {
-                console.log('histories', histories);
-                this.histories = histories;
-            });
-
-        this.translatesService.getFavoritesCount()
-            .then((favoritesCount) => {
-                console.log('favoritesCount', favoritesCount);
+        this.translatesService.getAll()
+            .then(({favoritesCount, favorites, historiesCount, histories}) => {
                 this.favoritesCount = favoritesCount;
-            });
-
-        this.translatesService.getFavorites()
-            .then((favorites) => {
-                console.log('favorites', favorites);
                 this.favorites = favorites;
+                this.historiesCount = historiesCount;
+                this.histories = histories;
             });
     }
 
     initUI() {
+        /* saveButton */
         this.saveButton = new SaveButtonComponent(WRAPPER_FOR_SAVE_BUTTONS_EL);
         this.saveButton.onclick = this.saveFavorite.bind(this);
 
@@ -69,6 +53,9 @@ export class AppComponent {
         this.sourceEl.addEventListener('change', this.onChangeSource.bind(this));
 
         this.resultEl = document.getElementById(RESULT_HTML_ID);
+
+        /* Favorites */
+        /* Histories */
     }
 
     onChangeSource() {
