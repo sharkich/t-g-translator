@@ -31,12 +31,9 @@ export class AppComponent {
             this.saveButton = new SaveButtonComponent(WRAPPER_FOR_SAVE_BUTTONS_EL);
 
             this.sourceEl = document.getElementById(SOURCE_HTML_ID);
-            this.sourceEl.addEventListener('input', () => {
-                this.saveButton.checkDisabled(this.sourceEl['value']);
-            });
-            this.sourceEl.addEventListener('change', () => {
-                this.saveButton.checkDisabled(this.sourceEl['value']);
-            });
+            this.saveButton.checkDisabled(this.sourceEl['value']);
+            this.sourceEl.addEventListener('input', () => this.saveButton.checkDisabled(this.sourceEl['value']));
+            this.sourceEl.addEventListener('change', () => this.saveButton.checkDisabled(this.sourceEl['value']));
 
             this.resultEl = document.getElementById(RESULT_HTML_ID);
         });
