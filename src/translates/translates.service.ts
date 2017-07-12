@@ -1,7 +1,6 @@
 import Dexie from 'dexie';
 
 import {Translate} from './translate.model';
-import {Phrase} from './phrase.model';
 
 export const DATABASE_NAME = 'TG_TRANSLATES_TEST_1';
 export const DEFAULT_LIMIT_HISTORIES = 10;
@@ -15,8 +14,8 @@ export class TranslatesService extends Dexie {
         super(DATABASE_NAME);
         console.log('TranslatesService.constructor');
         this.version(1).stores({
-            favorites: '++id, date',//, source.text, result.text
-            histories: '++id, date'//, source.text, result.text
+            favorites: '++id, date, source.text, result.text',
+            histories: '++id, date, source.text, result.text'
         });
     }
 

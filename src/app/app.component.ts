@@ -5,6 +5,7 @@ import {Translate} from '../translates/translate.model';
 
 import {SaveButtonComponent} from '../save-button.component/save-button.component';
 import {ListComponent} from '../list.component/list.component';
+import {Phrase} from "../translates/phrase.model";
 
 const WRAPPER_FOR_SAVE_BUTTONS_HTML_ID = 'gt-lang-submit';
 const WRAPPER_FOR_LISTS_HTML_ID = 'gt-text-top';
@@ -12,7 +13,9 @@ const LISTS_HTML_ID = 'tg__lists';
 const LISTS_CLASS_NAME = LISTS_HTML_ID;
 
 const SOURCE_HTML_ID = 'source';
+const SOURCE_LANG_HTML_ID = 'gt-sl';
 const RESULT_HTML_ID = 'result_box';
+const TRANSLATE_HTML_ID = 'gt-submit';
 
 const DEBOUNCE_TIME_HISTORY = 1000;
 
@@ -24,7 +27,10 @@ export class AppComponent {
 
     public saveButtonComponent: SaveButtonComponent;
 
+    public translateButtonEl: HTMLElement;
+
     public sourceEl: HTMLElement;
+    public sourceLangEl: HTMLElement;
     public sourceChangingTimer: number;
     public resultEl: HTMLElement;
 
@@ -62,6 +68,10 @@ export class AppComponent {
         this.saveButtonComponent = new SaveButtonComponent(document.getElementById(WRAPPER_FOR_SAVE_BUTTONS_HTML_ID));
         this.saveButtonComponent.onclick = this.saveFavorite.bind(this);
 
+        this.translateButtonEl = document.getElementById(TRANSLATE_HTML_ID);
+        this.translateButtonEl.onclick = this.saveHistory.bind(this);
+
+        this.sourceLangEl = document.getElementById(SOURCE_LANG_HTML_ID);
         this.sourceEl = document.getElementById(SOURCE_HTML_ID);
         this.onChangeSource();
         this.sourceEl.addEventListener('input', this.onChangeSource.bind(this));
@@ -94,11 +104,44 @@ export class AppComponent {
         this.saveButtonComponent.checkDisabled(this.sourceEl['value']);
     }
 
+    private getTranslate(): Translate {
+        return new Translate({
+            source: new Phrase({
+                text: this.sourceEl['value'],
+                language: this.sourceLangEl['value']
+            }),
+            result: new Phrase({
+                text: this.resultEl.innerText,
+                language: this.resultEl.getAttribute('lang')
+            })
+        });
+    }
+
     saveHistory() {
-        console.log('saveHistory', this.sourceEl['value']);
+        const translate = this.getTranslate();
+        this.translatesService.addHistory(translate)
+            .then((list) => {
+                this.histories = list;
+                this.historiesComponent.setList(list);
+                this.translatesService.getHistoriesCount()
+                    .then((count) => {
+                        this.historiesCount = count;
+                        this.historiesComponent.setCount(count);
+                    });
+            });
     }
 
     saveFavorite() {
-        console.log('saveFavorite', this.sourceEl['value']);
+        const translate = this.getTranslate();
+        this.translatesService.addFavorite(translate)
+            .then((list) => {
+                this.favorites = list;
+                this.favoritesComponent.setList(list);
+                this.translatesService.getFavoritesCount()
+                    .then((count) => {
+                        this.favoritesCount = count;
+                        this.favoritesComponent.setCount(count);
+                    });
+            });
     }
 }
