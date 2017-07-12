@@ -12,7 +12,6 @@ export class TranslatesService extends Dexie {
 
     constructor() {
         super(DATABASE_NAME);
-        console.log('TranslatesService.constructor');
         this.version(1).stores({
             favorites: '++id, date, source.text, result.text',
             histories: '++id, date, source.text, result.text'

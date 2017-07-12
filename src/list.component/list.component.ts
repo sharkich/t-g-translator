@@ -46,6 +46,8 @@ export class ListComponent {
         const LIST_EL = document.createElement('div');
         LIST_EL.classList.add(LIST_CLASS_NAME);
 
+        this.list = list;
+
         list.forEach((translate: Translate) => {
             const TRANSLATE_EL = document.createElement('div');
             TRANSLATE_EL.classList.add(LIST_ITEM_CLASS_NAME);
