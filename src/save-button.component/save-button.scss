@@ -1,0 +1,11 @@
+.tg {
+    &__btn-save {
+        &__disabled {
+            color: #666 !important;
+            cursor: default;
+        }
+        &__disabled:hover {
+            text-decoration: none !important;
+        }
+    }
+}

@@ -1,6 +1,13 @@
 import {AppService} from './app.service';
+
 import {TranslatesService} from '../translates/translates.service';
 import {Translate} from '../translates/translate.model';
+
+import {SaveButtonComponent} from '../save-button.component/save-button.component';
+
+const WRAPPER_FOR_SAVE_BUTTONS_EL = document.getElementById('gt-lang-submit');
+const SOURCE_HTML_ID = 'source';
+const RESULT_HTML_ID = 'result_box';
 
 export class AppComponent {
     public favoritesCount: number;
@@ -8,12 +15,33 @@ export class AppComponent {
     public historiesCount: number;
     public histories: Translate[] = [];
 
+    public saveButton: SaveButtonComponent;
+    public sourceEl: HTMLElement;
+    public resultEl: HTMLElement;
+
     private translatesService = new TranslatesService();
 
     constructor() {
         if (AppService.isFirstLaunch()) {
             // TODO: show first screen
         }
+
+        /* Init UI */
+        window.addEventListener('load', () => {
+            this.saveButton = new SaveButtonComponent(WRAPPER_FOR_SAVE_BUTTONS_EL);
+
+            this.sourceEl = document.getElementById(SOURCE_HTML_ID);
+            this.sourceEl.addEventListener('input', () => {
+                this.saveButton.checkDisabled(this.sourceEl['value']);
+            });
+            this.sourceEl.addEventListener('change', () => {
+                this.saveButton.checkDisabled(this.sourceEl['value']);
+            });
+
+            this.resultEl = document.getElementById(RESULT_HTML_ID);
+        });
+
+        /* Get data */
 
         this.translatesService.getHistoriesCount()
             .then((historiesCount) => {
