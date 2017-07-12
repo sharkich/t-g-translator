@@ -4,7 +4,7 @@ import {TranslatesService} from '../translates/translates.service';
 import {Translate} from '../translates/translate.model';
 
 import {SaveButtonComponent} from '../save-button.component/save-button.component';
-import {FavoritesComponent} from '../favorites.component/favorites.component';
+import {ListComponent} from '../list.component/list.component';
 
 const WRAPPER_FOR_SAVE_BUTTONS_HTML_ID = 'gt-lang-submit';
 const WRAPPER_FOR_LISTS_HTML_ID = 'gt-text-top';
@@ -28,8 +28,8 @@ export class AppComponent {
     public sourceChangingTimer: number;
     public resultEl: HTMLElement;
 
-    public favoritesComponent: FavoritesComponent;
-    public historiesComponent: FavoritesComponent;
+    public favoritesComponent: ListComponent;
+    public historiesComponent: ListComponent;
 
     private translatesService = new TranslatesService();
 
@@ -80,10 +80,10 @@ export class AppComponent {
         WRAPPER.appendChild(LIST_EL);
 
         /* Favorites */
-        this.favoritesComponent = new FavoritesComponent(LIST_EL);
+        this.favoritesComponent = new ListComponent(LIST_EL, 'Favorite');
 
         /* Histories */
-        this.historiesComponent = new FavoritesComponent(LIST_EL, 'History');
+        this.historiesComponent = new ListComponent(LIST_EL, 'History');
     }
 
     onChangeSource() {

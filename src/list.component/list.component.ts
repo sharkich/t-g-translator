@@ -1,8 +1,8 @@
 import {Translate} from '../translates/translate.model';
 
-const TITLE = 'Favorites';
+const TITLE = 'List';
 
-const CLASS_NAME = 'tg__favorites';
+const CLASS_NAME = 'tg__list';
 
 const TITLE_CLASS_NAME = CLASS_NAME + '__title';
 const LIST_CLASS_NAME = CLASS_NAME + '__list';
@@ -12,7 +12,7 @@ const LIST_ITEM_SOURCE_CLASS_NAME = LIST_ITEM_CLASS_NAME + '__source';
 const LIST_ITEM_DELIMITER_CLASS_NAME = LIST_ITEM_CLASS_NAME + '__delimiter';
 const LIST_ITEM_RESULT_CLASS_NAME = LIST_ITEM_CLASS_NAME + '__result';
 
-export class FavoritesComponent {
+export class ListComponent {
     public el: HTMLElement;
     public elTitle: HTMLElement;
     public title: string;

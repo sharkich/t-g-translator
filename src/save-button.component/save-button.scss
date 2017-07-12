@@ -1,5 +1,9 @@
 .tg {
     &__btn-save {
+        height: 30px;
+        margin: 0 8px;
+        cursor: pointer;
+
         &__disabled {
             color: #666 !important;
             cursor: default;

@@ -3,20 +3,6 @@
         clear: both;
     }
 
-    &__btn-save {
-        height: 30px;
-        margin: 0 8px;
-        cursor: pointer;
-    }
-
-    &__source-text {
-        color: #000;
-    }
-
-    &__result-text {
-        color: #777;
-    }
-
     &__lists {
         width: 100%;
         display: flex;
@@ -27,4 +13,4 @@
 }
 
 @import "save-button.component/save-button";
-@import "favorites.component/favorites";
+@import "list.component/list";

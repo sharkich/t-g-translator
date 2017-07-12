@@ -1,0 +1,16 @@
+.tg {
+    &__title {
+    }
+    &__list {
+        &__list {
+            &__item {
+                &__source {
+                    color: #000;
+                }
+                &__result {
+                    color: #777;
+                }
+            }
+        }
+    }
+}
