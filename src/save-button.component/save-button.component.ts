@@ -4,6 +4,7 @@ const CLASS_NAME_DISABLED = CLASS_NAME + '__disabled';
 
 export class SaveButtonComponent {
     public el: HTMLElement;
+    public onclick: (() => void);
 
     private isDisabled: boolean;
 
@@ -11,13 +12,15 @@ export class SaveButtonComponent {
         this.el = document.createElement('a');
         this.el.appendChild(document.createTextNode(title));
         this.el.classList.add(CLASS_NAME);
-        this.el.onclick = this.onclick.bind(this);
+        this.el.onclick = this.handleOnClick.bind(this);
         wrapperEl.appendChild(this.el);
     }
 
-    onclick() {
+    handleOnClick() {
         if (this.isDisabled) return;
-        console.log('click', this.isDisabled);
+        if (this.onclick) {
+            this.onclick();
+        }
     }
 
     checkDisabled(sourceValue: string) {
