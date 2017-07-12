@@ -29,6 +29,7 @@ export class AppComponent {
     public resultEl: HTMLElement;
 
     public favoritesComponent: FavoritesComponent;
+    public historiesComponent: FavoritesComponent;
 
     private translatesService = new TranslatesService();
 
@@ -47,6 +48,12 @@ export class AppComponent {
                 this.favorites = favorites;
                 this.historiesCount = historiesCount;
                 this.histories = histories;
+
+                this.favoritesComponent.setCount(this.favoritesCount);
+                this.favoritesComponent.setList(this.favorites);
+
+                this.historiesComponent.setCount(this.historiesCount);
+                this.historiesComponent.setList(this.histories);
             });
     }
 
@@ -76,7 +83,7 @@ export class AppComponent {
         this.favoritesComponent = new FavoritesComponent(LIST_EL);
 
         /* Histories */
-        this.favoritesComponent = new FavoritesComponent(LIST_EL, 'History');
+        this.historiesComponent = new FavoritesComponent(LIST_EL, 'History');
     }
 
     onChangeSource() {
