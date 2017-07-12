@@ -119,6 +119,11 @@ export class AppComponent {
 
     saveHistory() {
         const translate = this.getTranslate();
+        const findTranslate = this.histories.find((el) =>
+            el.result.text === translate.result.text &&
+            el.source.text === translate.source.text
+        );
+        if (findTranslate) return;
         this.translatesService.addHistory(translate)
             .then((list) => {
                 this.histories = list;
@@ -133,6 +138,11 @@ export class AppComponent {
 
     saveFavorite() {
         const translate = this.getTranslate();
+        const findTranslate = this.favorites.find((el) =>
+            el.result.text === translate.result.text &&
+            el.source.text === translate.source.text
+        );
+        if (findTranslate) return;
         this.translatesService.addFavorite(translate)
             .then((list) => {
                 this.favorites = list;
