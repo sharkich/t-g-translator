@@ -1,4 +1,4 @@
-import {Phrase} from './phrase';
+import {Phrase} from './phrase.model';
 
 export class Translate {
     // private id: string;
