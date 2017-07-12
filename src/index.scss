@@ -16,6 +16,15 @@
     &__result-text {
         color: #777;
     }
+
+    &__lists {
+        width: 100%;
+        display: flex;
+        > div {
+            width: 50%;
+        }
+    }
 }
 
 @import "save-button.component/save-button";
+@import "favorites.component/favorites";

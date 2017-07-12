@@ -4,8 +4,13 @@ import {TranslatesService} from '../translates/translates.service';
 import {Translate} from '../translates/translate.model';
 
 import {SaveButtonComponent} from '../save-button.component/save-button.component';
+import {FavoritesComponent} from '../favorites.component/favorites.component';
 
-const WRAPPER_FOR_SAVE_BUTTONS_EL = document.getElementById('gt-lang-submit');
+const WRAPPER_FOR_SAVE_BUTTONS_HTML_ID = 'gt-lang-submit';
+const WRAPPER_FOR_LISTS_HTML_ID = 'gt-text-top';
+const LISTS_HTML_ID = 'tg__lists';
+const LISTS_CLASS_NAME = LISTS_HTML_ID;
+
 const SOURCE_HTML_ID = 'source';
 const RESULT_HTML_ID = 'result_box';
 
@@ -17,10 +22,13 @@ export class AppComponent {
     public historiesCount: number;
     public histories: Translate[] = [];
 
-    public saveButton: SaveButtonComponent;
+    public saveButtonComponent: SaveButtonComponent;
+
     public sourceEl: HTMLElement;
     public sourceChangingTimer: number;
     public resultEl: HTMLElement;
+
+    public favoritesComponent: FavoritesComponent;
 
     private translatesService = new TranslatesService();
 
@@ -44,8 +52,8 @@ export class AppComponent {
 
     initUI() {
         /* saveButton */
-        this.saveButton = new SaveButtonComponent(WRAPPER_FOR_SAVE_BUTTONS_EL);
-        this.saveButton.onclick = this.saveFavorite.bind(this);
+        this.saveButtonComponent = new SaveButtonComponent(document.getElementById(WRAPPER_FOR_SAVE_BUTTONS_HTML_ID));
+        this.saveButtonComponent.onclick = this.saveFavorite.bind(this);
 
         this.sourceEl = document.getElementById(SOURCE_HTML_ID);
         this.onChangeSource();
@@ -54,8 +62,21 @@ export class AppComponent {
 
         this.resultEl = document.getElementById(RESULT_HTML_ID);
 
+        const WRAPPER = document.getElementById(WRAPPER_FOR_LISTS_HTML_ID);
+
+        const CLEAR_BOTH = document.createElement('div');
+        CLEAR_BOTH.classList.add('tg__c');
+        WRAPPER.appendChild(CLEAR_BOTH);
+
+        const LIST_EL = document.createElement(LISTS_HTML_ID);
+        LIST_EL.classList.add(LISTS_CLASS_NAME);
+        WRAPPER.appendChild(LIST_EL);
+
         /* Favorites */
+        this.favoritesComponent = new FavoritesComponent(LIST_EL);
+
         /* Histories */
+        this.favoritesComponent = new FavoritesComponent(LIST_EL, 'History');
     }
 
     onChangeSource() {
@@ -63,7 +84,7 @@ export class AppComponent {
             clearTimeout(this.sourceChangingTimer);
         }
         this.sourceChangingTimer = setTimeout(this.saveHistory.bind(this), DEBOUNCE_TIME_HISTORY);
-        this.saveButton.checkDisabled(this.sourceEl['value']);
+        this.saveButtonComponent.checkDisabled(this.sourceEl['value']);
     }
 
     saveHistory() {
