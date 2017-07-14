@@ -4,13 +4,38 @@
     &__list {
         &__list {
             &__item {
+                position: relative;
+                padding-right: 20px;
+                margin: 2px 20px;
+
                 &__source {
                     color: #000;
                 }
                 &__result {
                     color: #777;
                 }
+
+                &:hover {
+                    .clear-button {
+                        display: inline-block;
+                        &:hover {
+
+                        }
+                    }
+                }
             }
         }
+
+        .clear-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: none;
+        }
+
+        .is-remove {
+            text-decoration: line-through;
+        }
+
     }
 }

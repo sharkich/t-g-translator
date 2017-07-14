@@ -91,9 +91,17 @@ export class AppComponent {
 
         /* Favorites */
         this.favoritesComponent = new ListComponent(LIST_EL, 'Favorite');
+        this.favoritesComponent.onRemove = (translate: Translate) => {
+            this.translatesService.removeFavorite(translate)
+                .then(this.updateFavoritesList.bind(this));
+        };
 
         /* Histories */
         this.historiesComponent = new ListComponent(LIST_EL, 'History');
+        this.historiesComponent.onRemove = (translate: Translate) => {
+            this.translatesService.removeHistory(translate)
+                .then(this.updateHistoriesList.bind(this));
+        };
     }
 
     onChangeSource() {
@@ -125,15 +133,7 @@ export class AppComponent {
         );
         if (findTranslate) return;
         this.translatesService.addHistory(translate)
-            .then((list) => {
-                this.histories = list;
-                this.historiesComponent.setList(list);
-                this.translatesService.getHistoriesCount()
-                    .then((count) => {
-                        this.historiesCount = count;
-                        this.historiesComponent.setCount(count);
-                    });
-            });
+            .then(this.updateHistoriesList.bind(this));
     }
 
     saveFavorite() {
@@ -144,14 +144,26 @@ export class AppComponent {
         );
         if (findTranslate) return;
         this.translatesService.addFavorite(translate)
-            .then((list) => {
-                this.favorites = list;
-                this.favoritesComponent.setList(list);
-                this.translatesService.getFavoritesCount()
-                    .then((count) => {
-                        this.favoritesCount = count;
-                        this.favoritesComponent.setCount(count);
-                    });
+            .then(this.updateFavoritesList.bind(this));
+    }
+
+    private updateHistoriesList(list) {
+        this.histories = list;
+        this.historiesComponent.setList(list);
+        this.translatesService.getHistoriesCount()
+            .then((count) => {
+                this.historiesCount = count;
+                this.historiesComponent.setCount(count);
+            });
+    }
+
+    private updateFavoritesList(list) {
+        this.favorites = list;
+        this.favoritesComponent.setList(list);
+        this.translatesService.getFavoritesCount()
+            .then((count) => {
+                this.favoritesCount = count;
+                this.favoritesComponent.setCount(count);
             });
     }
 }

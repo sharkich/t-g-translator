@@ -1,15 +1,17 @@
 import {Phrase} from './phrase.model';
 
 export class Translate {
-    // private id: string;
+    public id: number;
     public date: Date; // Date.now() ?
     public source: Phrase;
     public result: Phrase;
 
-    constructor ({id = '', date = new Date(), source, result}) {
-        // this.id = id;
-        this.date = date;
-        this.source = source instanceof Phrase ? source : new Phrase(source);
-        this.result = result instanceof Phrase ? result : new Phrase(result);
+    constructor (resourse: any = {}) {
+        if (resourse.id) {
+            this.id = resourse.id;
+        }
+        this.date = resourse.date;
+        this.source = resourse.source instanceof Phrase ? resourse.source : new Phrase(resourse.source);
+        this.result = resourse.result instanceof Phrase ? resourse.result : new Phrase(resourse.result);
     }
 }

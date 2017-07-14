@@ -49,8 +49,17 @@ export class TranslatesService extends Dexie {
             .then(favorites => favorites.map(favorite => new Translate(favorite)));
     }
 
-    addFavorite(favorite: Translate): Promise<Translate[]> {
-        return this.favorites.add(favorite)
+    addFavorite(translate: Translate): Promise<Translate[]> {
+        return this.favorites.add(translate)
+            .then(() => this.getFavorites())
+            .catch(e => {
+                console.error('error: ' + e.stack || e);
+                return Promise.reject(e);
+            });
+    }
+
+    removeFavorite(translate: Translate): Promise<Translate[]> {
+        return this.favorites.delete(translate.id)
             .then(() => this.getFavorites())
             .catch(e => {
                 console.error('error: ' + e.stack || e);
@@ -74,8 +83,17 @@ export class TranslatesService extends Dexie {
             .then(histories => histories.map(history => new Translate(history)));
     }
 
-    addHistory(history: Translate): Promise<Translate[]> {
-        return this.histories.add(history)
+    addHistory(translate: Translate): Promise<Translate[]> {
+        return this.histories.add(translate)
+            .then(() => this.getHistories())
+            .catch(e => {
+                console.error('error: ' + e.stack || e);
+                return Promise.reject(e);
+            });
+    }
+
+    removeHistory(translate: Translate): Promise<Translate[]> {
+        return this.histories.delete(translate.id)
             .then(() => this.getHistories())
             .catch(e => {
                 console.error('error: ' + e.stack || e);

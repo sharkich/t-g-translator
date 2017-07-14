@@ -21,6 +21,8 @@ export class ListComponent {
     private count: number;
     private list: Translate[];
 
+    public onRemove: ((Translate) => void);
+
     constructor(wrapperEl: HTMLElement, title: string = TITLE) {
         this.el = document.createElement('div');
         this.el.classList.add(CLASS_NAME);
@@ -67,6 +69,22 @@ export class ListComponent {
             el = document.createElement('span');
             el.classList.add(LIST_ITEM_RESULT_CLASS_NAME);
             el.appendChild(document.createTextNode(translate.result.text));
+            TRANSLATE_EL.appendChild(el);
+
+            el = document.createElement('span');
+            el.innerHTML = `<div class="clear-button goog-toolbar-button"><span class="jfk-button-img"></span></div>`;
+            el.onmouseover = () => {
+                TRANSLATE_EL.classList.add('is-remove');
+            };
+            el.onmouseout = () => {
+                TRANSLATE_EL.classList.remove('is-remove');
+            };
+            el.onclick = () => {
+                console.log('click', this);
+                if (this.onRemove) {
+                    this.onRemove(translate);
+                }
+            };
             TRANSLATE_EL.appendChild(el);
 
             LIST_EL.appendChild(TRANSLATE_EL);
