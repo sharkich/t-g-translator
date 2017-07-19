@@ -3,8 +3,8 @@ import Dexie from 'dexie';
 import {Translate} from './translate.model';
 
 export const DATABASE_NAME = 'TG_TRANSLATES_TEST_1';
-export const DEFAULT_LIMIT_HISTORIES = 10;
-export const DEFAULT_LIMIT_FAVORITES = 10;
+export const DEFAULT_LIMIT_HISTORIES = 32;
+export const DEFAULT_LIMIT_FAVORITES = 32;
 
 export class TranslatesService extends Dexie {
     public favorites: Dexie.Table<Translate, number>;

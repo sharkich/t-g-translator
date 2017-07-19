@@ -58,11 +58,15 @@ export class AppComponent {
                 this.historiesCount = historiesCount;
                 this.histories = histories;
 
-                this.favoritesComponent.setCount(this.favoritesCount);
-                this.favoritesComponent.setList(this.favorites);
+                if (this.favoritesComponent) {
+                    this.favoritesComponent.setCount(this.favoritesCount);
+                    this.favoritesComponent.setList(this.favorites);
+                }
 
-                this.historiesComponent.setCount(this.historiesCount);
-                this.historiesComponent.setList(this.histories);
+                if (this.historiesComponent) {
+                    this.historiesComponent.setCount(this.historiesCount);
+                    this.historiesComponent.setList(this.histories);
+                }
             });
     }
 
@@ -127,6 +131,7 @@ export class AppComponent {
 
     private getTranslate(): Translate {
         return new Translate({
+            date: new Date(),
             source: new Phrase({
                 text: this.sourceEl['value'],
                 language: this.sourceLangEl['value'],

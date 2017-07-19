@@ -1,4 +1,5 @@
 import {Translate} from '../translates/translate.model';
+import {Phrase} from "../translates/phrase.model";
 
 const TITLE = 'List';
 
@@ -7,11 +8,15 @@ const CLASS_NAME = 'tg__list';
 const TITLE_CLASS_NAME = CLASS_NAME + '__title';
 const LIST_CLASS_NAME = CLASS_NAME + '__list';
 const LOAD_MORE_CLASS_NAME = CLASS_NAME + '__load-more';
+const DATE_CLASS_NAME = CLASS_NAME + '__date';
+const HR_CLASS_NAME = CLASS_NAME + '__hr';
 
 const LIST_ITEM_CLASS_NAME = LIST_CLASS_NAME + '__item';
 const LIST_ITEM_SOURCE_CLASS_NAME = LIST_ITEM_CLASS_NAME + '__source';
 const LIST_ITEM_DELIMITER_CLASS_NAME = LIST_ITEM_CLASS_NAME + '__delimiter';
 const LIST_ITEM_RESULT_CLASS_NAME = LIST_ITEM_CLASS_NAME + '__result';
+
+const SOURCE_HTML_ID = 'source';
 
 export class ListComponent {
     public el: HTMLElement;
@@ -64,6 +69,10 @@ export class ListComponent {
         this.checkLoadMore();
     }
 
+    private generateDateString(date: Date) {
+        return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`
+    }
+
     setList(list: Translate[] = []) {
         const LIST_EL = document.createElement('div');
         LIST_EL.classList.add(LIST_CLASS_NAME);
@@ -71,15 +80,34 @@ export class ListComponent {
         this.list = list;
         this.checkLoadMore();
 
+        let lastDate = '';
+
         list.forEach((translate: Translate) => {
             const TRANSLATE_EL = document.createElement('div');
             TRANSLATE_EL.classList.add(LIST_ITEM_CLASS_NAME);
 
             let el;
 
+            let date = this.generateDateString(translate.date);
+            if (date !== lastDate) {
+                lastDate = date;
+                el = document.createElement('hr');
+                el.classList.add(HR_CLASS_NAME);
+                LIST_EL.appendChild(el);
+
+                el = document.createElement('div');
+                el.classList.add(DATE_CLASS_NAME);
+                el.innerText = date;
+                LIST_EL.appendChild(el);
+            }
+
             el = document.createElement('span');
             el.classList.add(LIST_ITEM_SOURCE_CLASS_NAME);
             el.appendChild(document.createTextNode(translate.source.text));
+            el.classList.add('gt-baf-back');
+            el.onclick = () => {
+                this.onClickTranslate(translate.source, translate.result);
+            };
             TRANSLATE_EL.appendChild(el);
 
             el = document.createElement('span');
@@ -89,6 +117,10 @@ export class ListComponent {
 
             el = document.createElement('span');
             el.classList.add(LIST_ITEM_RESULT_CLASS_NAME);
+            el.classList.add('gt-baf-back');
+            el.onclick = () => {
+                this.onClickTranslate(translate.result, translate.source);
+            };
             el.appendChild(document.createTextNode(translate.result.text));
             TRANSLATE_EL.appendChild(el);
 
@@ -112,5 +144,10 @@ export class ListComponent {
 
         this.elList.innerHTML = '';
         this.elList.appendChild(LIST_EL);
+    }
+
+    private onClickTranslate(from: Phrase, to: Phrase) {
+        window.location.href = `/#${from.language}/${to.language}/${from.text}`;
+        document.getElementById(SOURCE_HTML_ID)['value'] = from.text;
     }
 }

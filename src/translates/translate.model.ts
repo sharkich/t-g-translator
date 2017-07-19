@@ -2,7 +2,7 @@ import {Phrase} from './phrase.model';
 
 export class Translate {
     public id: number;
-    public date: Date; // Date.now() ?
+    public date: Date;
     public source: Phrase;
     public result: Phrase;
 
@@ -10,7 +10,7 @@ export class Translate {
         if (resourse.id) {
             this.id = resourse.id;
         }
-        this.date = resourse.date;
+        this.date = resourse.date || new Date();
         this.source = resourse.source instanceof Phrase ? resourse.source : new Phrase(resourse.source);
         this.result = resourse.result instanceof Phrase ? resourse.result : new Phrase(resourse.result);
     }
