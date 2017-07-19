@@ -149,5 +149,6 @@ export class ListComponent {
     private onClickTranslate(from: Phrase, to: Phrase) {
         window.location.href = `/#${from.language}/${to.language}/${from.text}`;
         document.getElementById(SOURCE_HTML_ID)['value'] = from.text;
+        window.scrollTo(0, 0);
     }
 }
