@@ -116,33 +116,40 @@ export class AppComponent {
         return new Translate({
             source: new Phrase({
                 text: this.sourceEl['value'],
-                language: this.sourceLangEl['value']
+                language: this.sourceLangEl['value'],
+                isTransform: true
             }),
             result: new Phrase({
                 text: this.resultEl.innerText,
-                language: this.resultEl.getAttribute('lang')
+                language: this.resultEl.getAttribute('lang'),
+                isTransform: true
             })
         });
     }
 
     saveHistory() {
         const translate = this.getTranslate();
+        if (translate.isEmpty) return;
         const findTranslate = this.histories.find((el) =>
             el.result.text === translate.result.text &&
             el.source.text === translate.source.text
         );
         if (findTranslate) return;
+
         this.translatesService.addHistory(translate)
             .then(this.updateHistoriesList.bind(this));
     }
 
     saveFavorite() {
         const translate = this.getTranslate();
+        if (translate.isEmpty) return;
+
         const findTranslate = this.favorites.find((el) =>
             el.result.text === translate.result.text &&
             el.source.text === translate.source.text
         );
         if (findTranslate) return;
+
         this.translatesService.addFavorite(translate)
             .then(this.updateFavoritesList.bind(this));
     }

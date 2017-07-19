@@ -14,4 +14,8 @@ export class Translate {
         this.source = resourse.source instanceof Phrase ? resourse.source : new Phrase(resourse.source);
         this.result = resourse.result instanceof Phrase ? resourse.result : new Phrase(resourse.result);
     }
+
+    get isEmpty (): boolean {
+        return !this.source.text.length || !this.result.text.length;
+    }
 }
