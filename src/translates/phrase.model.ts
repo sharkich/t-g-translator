@@ -14,7 +14,6 @@ export class Phrase {
             if (this.text.indexOf('...') === this.text.length - 3) {
                 this.text = this.text.substr(0, this.text.length - 3);
             }
-            console.log(`transform (${text})->(${this.text})`);
         }
         this.language = language || LANGUAGES.english;
     }

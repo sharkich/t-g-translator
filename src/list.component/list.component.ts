@@ -6,6 +6,7 @@ const CLASS_NAME = 'tg__list';
 
 const TITLE_CLASS_NAME = CLASS_NAME + '__title';
 const LIST_CLASS_NAME = CLASS_NAME + '__list';
+const LOAD_MORE_CLASS_NAME = CLASS_NAME + '__load-more';
 
 const LIST_ITEM_CLASS_NAME = LIST_CLASS_NAME + '__item';
 const LIST_ITEM_SOURCE_CLASS_NAME = LIST_ITEM_CLASS_NAME + '__source';
@@ -18,8 +19,11 @@ export class ListComponent {
     public title: string;
 
     public elList: HTMLElement;
-    private count: number;
-    private list: Translate[];
+    private count: number = 0;
+    private list: Translate[] = [];
+
+    public elLoadMore: HTMLElement;
+    public onLoadMore: (() => void);
 
     public onRemove: ((Translate) => void);
 
@@ -36,12 +40,28 @@ export class ListComponent {
         this.elList = document.createElement('div');
         this.el.appendChild(this.elList);
 
+        this.elLoadMore = document.createElement('a');
+        this.elLoadMore.classList.add(LOAD_MORE_CLASS_NAME);
+        this.elLoadMore.innerText = 'Load More';
+        this.elLoadMore.onclick = () => {
+            if (this.onLoadMore) {
+                this.onLoadMore();
+            }
+        };
+        this.el.appendChild(this.elLoadMore);
+
         this.setCount();
         this.setList();
     }
 
+    private checkLoadMore() {
+        this.elLoadMore.style.visibility = this.list.length === this.count ? 'hidden' : 'visible';
+    }
+
     setCount(count: number = 0) {
+        this.count = count;
         this.elTitle.innerHTML = count ? `${this.title} <span>(${count})</span>` : this.title;
+        this.checkLoadMore();
     }
 
     setList(list: Translate[] = []) {
@@ -49,6 +69,7 @@ export class ListComponent {
         LIST_EL.classList.add(LIST_CLASS_NAME);
 
         this.list = list;
+        this.checkLoadMore();
 
         list.forEach((translate: Translate) => {
             const TRANSLATE_EL = document.createElement('div');
@@ -80,7 +101,6 @@ export class ListComponent {
                 TRANSLATE_EL.classList.remove('is-remove');
             };
             el.onclick = () => {
-                console.log('click', this);
                 if (this.onRemove) {
                     this.onRemove(translate);
                 }

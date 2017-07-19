@@ -58,9 +58,9 @@ export class TranslatesService extends Dexie {
             });
     }
 
-    removeFavorite(translate: Translate): Promise<Translate[]> {
+    removeFavorite(translate: Translate, limit): Promise<Translate[]> {
         return this.favorites.delete(translate.id)
-            .then(() => this.getFavorites())
+            .then(() => this.getFavorites(limit))
             .catch(e => {
                 console.error('error: ' + e.stack || e);
                 return Promise.reject(e);
@@ -92,9 +92,9 @@ export class TranslatesService extends Dexie {
             });
     }
 
-    removeHistory(translate: Translate): Promise<Translate[]> {
+    removeHistory(translate: Translate, limit): Promise<Translate[]> {
         return this.histories.delete(translate.id)
-            .then(() => this.getHistories())
+            .then(() => this.getHistories(limit))
             .catch(e => {
                 console.error('error: ' + e.stack || e);
                 return Promise.reject(e);

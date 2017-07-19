@@ -37,5 +37,12 @@
             text-decoration: line-through;
         }
 
+        &__load-more {
+            cursor: pointer;
+            margin-left: 20px;
+            display: block;
+            text-align: center;
+        }
+
     }
 }

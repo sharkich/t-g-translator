@@ -1,6 +1,6 @@
 import {AppService} from './app.service';
 
-import {TranslatesService} from '../translates/translates.service';
+import {TranslatesService, DEFAULT_LIMIT_FAVORITES, DEFAULT_LIMIT_HISTORIES} from '../translates/translates.service';
 import {Translate} from '../translates/translate.model';
 
 import {SaveButtonComponent} from '../save-button.component/save-button.component';
@@ -36,6 +36,9 @@ export class AppComponent {
 
     public favoritesComponent: ListComponent;
     public historiesComponent: ListComponent;
+
+    private favoritesLoadedCount: number = DEFAULT_LIMIT_FAVORITES;
+    private historiesLoadedCount: number = DEFAULT_LIMIT_HISTORIES;
 
     private translatesService = new TranslatesService();
 
@@ -92,14 +95,24 @@ export class AppComponent {
         /* Favorites */
         this.favoritesComponent = new ListComponent(LIST_EL, 'Favorite');
         this.favoritesComponent.onRemove = (translate: Translate) => {
-            this.translatesService.removeFavorite(translate)
+            this.translatesService.removeFavorite(translate, this.favoritesLoadedCount)
+                .then(this.updateFavoritesList.bind(this));
+        };
+        this.favoritesComponent.onLoadMore = () => {
+            this.favoritesLoadedCount += DEFAULT_LIMIT_FAVORITES;
+            this.translatesService.getFavorites(this.favoritesLoadedCount)
                 .then(this.updateFavoritesList.bind(this));
         };
 
         /* Histories */
         this.historiesComponent = new ListComponent(LIST_EL, 'History');
         this.historiesComponent.onRemove = (translate: Translate) => {
-            this.translatesService.removeHistory(translate)
+            this.translatesService.removeHistory(translate, this.historiesLoadedCount)
+                .then(this.updateHistoriesList.bind(this));
+        };
+        this.historiesComponent.onLoadMore = () => {
+            this.historiesLoadedCount += DEFAULT_LIMIT_HISTORIES;
+            this.translatesService.getHistories(this.historiesLoadedCount)
                 .then(this.updateHistoriesList.bind(this));
         };
     }
